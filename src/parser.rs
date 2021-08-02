@@ -79,7 +79,6 @@ pub fn binary_parser(input: &str) -> expr {
         Ok(v) => v,
         _ => panic!(),
     };
-    
     let (rest_str, op) = match operandParser(op_str) {
         Ok(v) => v,
         _ => panic!(),
