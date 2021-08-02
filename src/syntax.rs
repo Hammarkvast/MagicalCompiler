@@ -8,6 +8,17 @@ pub enum operand {
     modulo,
 }
 #[derive(Debug, PartialEq, Clone)]
+pub enum expr {
+    BinaryExpr(Box<expr>, operand, Box<expr>),
+    i_32(i32),
+    boolean(bool),
+    var(String),
+
+    Let(Box<expr>, types, Box<expr>),
+    Return(Box<expr>)
+}
+
+#[derive(Debug, PartialEq, Clone)]
 pub enum comparator {
     equal, 
     lesser, 
@@ -15,3 +26,16 @@ pub enum comparator {
     lesserEqual,
     greaterEqual,
 }
+#[derive(Debug, PartialEq, Clone)]
+pub enum types {
+    i_32, 
+    string,
+    boolean,
+}
+#[derive(Debug, PartialEq, Clone)]
+pub enum var {
+    Name(String),
+    Value(String),
+}
+
+
