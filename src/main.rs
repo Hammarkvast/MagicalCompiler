@@ -21,6 +21,9 @@ fn main() {
     println!("OPERAND_PARSER: {:?}", operand_parser_test);
 
     let binary_parser_test = parser::binary_parser("1 + 3");
-    println!("BINARY_PARSER: {:?}", binary_parser_test)
+    println!("BINARY_PARSER: {:?}", binary_parser_test);
+
+    let comp_expr_parser_test = parser::comp_expr_parser("3 <= 5");
+    println!("COMPARATOR PARSER: {:?}", comp_expr_parser_test)
 
 }

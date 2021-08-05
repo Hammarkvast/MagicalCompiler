@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 extern crate nom;
 
 use nom::{
@@ -72,6 +73,38 @@ pub fn operandParser(input: &str) -> IResult<&str, operand> {
                             ))
                             )(input);
     return op;
+}
+
+pub fn comparatorParser(input: &str) -> IResult<&str, comparator> {
+    let comp: IResult<&str, comparator> = preceded(
+        multispace0, 
+        alt((
+            map(tag("=="), |_| comparator::equal),
+            map(tag("<="), |_| comparator::lesserEqual),
+            map(tag(">="), |_| comparator::greaterEqual),
+            map(tag("<"), |_| comparator::lesser),
+            map(tag(">"), |_| comparator::greater),
+        ))
+    )(input);
+    comp
+}
+
+pub fn comp_expr_parser(input: &str) -> expr {
+    let (comp_str, int1) = match integer_parser(input) {
+        Ok(v) => v,
+        _ => panic!("Cannot compare non integers"),
+    };
+    println!("test");
+    let (rest_str, comp) = match comparatorParser(comp_str) {
+        Ok(v) => v,
+        _ => panic!("Non existent comparator"),
+    };
+    println!("REST STRING: {:?}", rest_str);
+    let (_, int2) = match integer_parser(rest_str) {
+        Ok(v) => v,
+        _ => panic!("Cannot compare non integers"),
+    };
+    return expr::CompExpr(Box::new(expr::i_32(int1.parse::<i32>().unwrap())), comp, Box::new(expr::i_32(int2.parse::<i32>().unwrap())))
 }
 
 pub fn binary_parser(input: &str) -> expr {

@@ -10,10 +10,11 @@ pub enum operand {
 #[derive(Debug, PartialEq, Clone)]
 pub enum expr {
     BinaryExpr(Box<expr>, operand, Box<expr>),
+    CompExpr(Box<expr>, comparator, Box<expr>),
     i_32(i32),
     boolean(bool),
     var(String),
-
+    If(Box<expr>, Box<expr>),
     Let(Box<expr>, types, Box<expr>),
     Return(Box<expr>)
 }
