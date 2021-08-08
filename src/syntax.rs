@@ -16,7 +16,8 @@ pub enum expr {
     var(String),
     If(Box<expr>, Box<expr>),
     Let(Box<expr>, types, Box<expr>),
-    Return(Box<expr>)
+    Return(Box<expr>),
+    While(Box<expr>, Box<expr>)
 }
 
 #[derive(Debug, PartialEq, Clone)]

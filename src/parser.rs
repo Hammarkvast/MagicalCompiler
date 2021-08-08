@@ -8,6 +8,7 @@ use nom::{
     character::{is_digit},
     character::complete::{multispace0, digit1},
     IResult,
+    multi::many0,
     sequence::{delimited, preceded, terminated}     
 
 };
@@ -40,6 +41,29 @@ pub fn let_parser(input: &str) -> IResult<&str, &str> {
     };
     return t;
 }
+
+pub fn return_parser(input: &str) -> expr {
+    let res_ret: IResult<&str, &str> = preceded(
+        tag("return"),
+        delimited(multispace0, take_while(char::is_alphanumeric), tag(";")))(input);
+    let (_,ret) = match res_ret {
+        Ok(v) => v,
+        _ => panic!(),
+    };
+    return expr::Return(Box::new(expr::var(ret.to_string())));
+}
+
+// pub fn if_parser(input: &str) -> expr {
+//     let res_if: IResult<&str, &str> = preceded(
+//                         tag("if"), 
+//                         multispace0)(input);
+//     let (t, _) = match res_if {
+//         Ok(v) => v,
+//         _ => panic!(),
+//     };
+//     let n = comp_expr_parser(t);
+
+// }
 
 pub fn name_parser(input: &str) -> IResult<&str, &str> {
     let var = preceded(multispace0,
@@ -99,7 +123,6 @@ pub fn comp_expr_parser(input: &str) -> expr {
         Ok(v) => v,
         _ => panic!("Non existent comparator"),
     };
-    println!("REST STRING: {:?}", rest_str);
     let (_, int2) = match integer_parser(rest_str) {
         Ok(v) => v,
         _ => panic!("Cannot compare non integers"),
@@ -122,3 +145,20 @@ pub fn binary_parser(input: &str) -> expr {
     };
     return expr::BinaryExpr(Box::new(expr::i_32(int1.parse::<i32>().unwrap())), op, Box::new(expr::i_32(int2.parse::<i32>().unwrap())));
 }
+
+pub fn curly_brack_parser(input: &str) -> expr {
+    let cur = preceded(
+                                multispace0,
+                                delimited(
+                                tag("{"), 
+                                many0(alt((
+                                    let_parser,
+                                    return_parser,
+                                    if_parser,
+                                    while_parser
+                                ))), tag("}")))(input);
+}
+
+// pub fn if_parser(input: &str) -> expr {
+//     let ()
+// }
